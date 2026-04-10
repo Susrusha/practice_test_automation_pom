@@ -1,20 +1,26 @@
 import random
 import string
+import pytest
 
+from utils.logger import get_logger
 from pages.login_page import LoginPage
 from config.config import base_url, redirected_url
 
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+@pytest.mark.positive
 def test_valid_details(setup):
     driver=setup
     login_page = LoginPage(driver)
+    logger = get_logger()
+    logger.info("Entering details:") 
     login_page.login("student", "Password123")
     login_page.click_logout()
-    WebDriverWait(driver, 10).until(EC.url_contains(base_url))
+    WebDriverWait(driver, 5).until(EC.url_contains(base_url))
     assert driver.current_url==base_url
 
+@pytest.mark.negative
 def test_invalid_details(setup):
     driver=setup
     login_page = LoginPage(driver)
@@ -29,9 +35,10 @@ def test_blank(setup):
     login_page.click_submit()
     assert login_page.get_error_message() == "Your username is invalid!"
 
+@pytest.mark.redirect
 def test_page_redirecting(setup):
     driver=setup
     login_page = LoginPage(driver)
     login_page.login("student", "Password123")
-    WebDriverWait(driver,10).until(EC.url_to_be(redirected_url))
+    WebDriverWait(driver, 5).until(EC.url_to_be(redirected_url))
     assert driver.current_url==redirected_url

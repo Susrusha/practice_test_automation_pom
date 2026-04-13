@@ -16,17 +16,20 @@ class LoginPage:
     error_message = (By.ID, "error")
     # actions
     def enter_username(self, username):
-        self.logger.debug("Entering username")
+        self.logger.info("Entering username")
+        self.logger.debug(f"Locator used: {self.username_input}")
         self.driver.find_element(*self.username_input).clear()
         self.driver.find_element(*self.username_input).send_keys(username)
 
     def enter_password(self, password):
-        self.logger.debug("Entering password")
+        self.logger.info("Entering password")
+        self.logger.debug(f"Locator used: {self.password_input}")
         self.driver.find_element(*self.password_input).clear()
         self.driver.find_element(*self.password_input).send_keys(password)
     
     def click_submit(self):
-        self.logger.debug("Clicking submit button")
+        self.logger.info("Clicking submit button")
+        self.logger.debug(f"Locator used: {self.submit_button}")
         self.driver.find_element(*self.submit_button).click()
     # logic
     def login(self, username, password):
@@ -35,12 +38,14 @@ class LoginPage:
         self.click_submit()
     # validations
     def click_logout(self):
-        self.logger.debug("Clicking logout button")
+        self.logger.info("Clicking logout button")
+        self.logger.debug(f"Locator used: {self.logout_link}")
         WebDriverWait(self.driver, 10).until(
         EC.visibility_of_element_located(self.logout_link)).click()
 
     def get_error_message(self):
-        self.logger.debug("Finding error message")
+        self.logger.info("Finding error message")
+        self.logger.debug(f"Locator used: {self.error_message}")
         return WebDriverWait(self.driver,10).until(
         EC.visibility_of_element_located(self.error_message)).text
     
